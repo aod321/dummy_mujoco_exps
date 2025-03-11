@@ -6,26 +6,27 @@ This project provides a visualization and control interface for robotic manipula
 
 ### 1. MuJoCo Installation
 
-Versioned releases are available as precompiled binaries from the GitHub [releases page](https://github.com/google-deepmind/mujoco/releases), built for Linux (x86-64 and AArch64), Windows (x86-64 only), and macOS (universal). This is the recommended way to use the software.
+```bash
+wget https://github.com/google-deepmind/mujoco/releases/download/3.3.0/mujoco-3.3.0-macos-universal2.dmg # macOS
+```
+```bash
+wget https://github.com/google-deepmind/mujoco/releases/download/3.3.0/mujoco-3.3.0-linux-x86_64.tar.gz # Linux
+```
+```bash
+wget https://github.com/google-deepmind/mujoco/releases/download/3.3.0/mujoco-3.3.0-windows-x86_64.zip # Windows
+```
 
-### Python (>= 3.9)
+### 2. Python (>= 3.9)
 
 [](https://github.com/google-deepmind/mujoco#python--39)
 
-The native Python bindings, which come pre-packaged with a copy of MuJoCo, can be installed from [PyPI](https://pypi.org/project/mujoco/) via:
+After installing the MuJoCo binary package, the Python bindings can be installed from [PyPI](https://pypi.org/project/mujoco/) via:
 
-```shell
-pip install mujoco
-```
 
 
 ## Usage
 
 The main script `view_model.py` provides several command-line options for different functionalities:
-
-```bash
-python view_model.py [options]
-```
 
 ### Command Line Options
 
@@ -41,12 +42,16 @@ python view_model.py [options]
 
 ### Example Commands
 
-Note: On macOS, replace `python` with `mjpython` in all commands below.
+Note: On **macOS**, replace `python` with `mjpython` in all commands below.
 
 1. Basic visualization:
 
 ```bash
 python view_model.py
+```
+or in macOS:
+```bash
+mjpython view_model.py
 ```
 
 2. Enable sensor data plotting:
@@ -55,13 +60,7 @@ python view_model.py
 python view_model.py --plot
 ```
 
-3. Enable Jacobian control:
-
-```bash
-python view_model.py --jacobian --site left_gripper_site
-```
-
-4. Enable compliance control:
+3. Enable compliance control:
 
 ```bash
 python view_model.py --compliance --force-gain 0.0001 --force-threshold 1
@@ -72,3 +71,15 @@ python view_model.py --compliance --force-gain 0.0001 --force-threshold 1
 - Right mouse button drag: Pan view
 - Mouse wheel: Zoom view
 - Ctrl+right mouse button drag: Apply external force to the model
+
+
+## Known Issues and Future Improvements
+
+### Gravity Compensation
+The current implementation simply cancels all gravity components, which also ignores vertical dragging forces. A more sophisticated approach would calculate precise gravity components based on real-time pose:
+
+- Implement real-time gravity decomposition based on end-effector orientation
+- Only compensate for the actual gravity component while preserving user-applied forces
+- Add configuration option to adjust gravity compensation sensitivity
+
+
